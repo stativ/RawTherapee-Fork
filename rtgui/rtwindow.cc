@@ -25,10 +25,15 @@ RTWindow::RTWindow () {
 
     cacheMgr.init ();
 
-    try {
-        set_default_icon_from_file (argv0+"/images/logoicon16.png");
-    }
-    catch (Glib::FileError) {}
+#ifdef GLIBMM_EXCEPTIONS_ENABLED
+		try { set_default_icon_from_file (argv0+"/images/logoicon16.png"); }
+		} (Glib::Exception& ex) {		printf ("%s\n", ex.what().c_str());	}
+#else
+ 	  {		std::auto_ptr<Glib::Error> error;
+				set_default_icon_from_file (argv0+"/images/logoicon16.png", error);
+		}
+#endif //GLIBMM_EXCEPTIONS_ENABLED
+
     set_title("Raw Therapee "+versionString);
     property_allow_shrink() = true;
 	set_size_request (1000,600);

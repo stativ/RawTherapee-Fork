@@ -22,6 +22,8 @@
 #include <sstream>
 #include <string.h>
 
+#include <safekeyfile.h>
+
 namespace rtengine {
 namespace procparams {
 
@@ -160,9 +162,10 @@ void ProcParams::setDefaults () {
     version = 249;
 }
 
+
 int ProcParams::save (Glib::ustring fname) const {
 
-    Glib::KeyFile keyFile;
+    SafeKeyFile keyFile;
 
     keyFile.set_integer ("Version", "Version", 231);
 
@@ -319,7 +322,7 @@ int ProcParams::save (Glib::ustring fname) const {
 
 int ProcParams::load (Glib::ustring fname) {
 
-    Glib::KeyFile keyFile;
+    SafeKeyFile keyFile;
     try {
         setDefaults ();
 

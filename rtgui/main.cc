@@ -37,6 +37,8 @@
 #include <glibmm/fileutils.h>
 #endif
 
+#include <safegtk.h>
+
 extern Options options;
 
 //#ifdef WIN32
@@ -82,8 +84,8 @@ int main(int argc, char **argv)
     else
         argv1_ = "";
 
-   argv0 = Glib::locale_to_utf8 (argv0_);
-   argv1 = Glib::locale_to_utf8 (argv1_);
+   argv0 = safe_locale_to_utf8 (argv0_);
+   argv1 = safe_locale_to_utf8 (argv1_);
 
    Glib::thread_init();
    gdk_threads_init();

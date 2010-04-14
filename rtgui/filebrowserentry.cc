@@ -21,6 +21,7 @@
 #include <cursormanager.h>
 #include <iomanip>
 #include <guiutils.h>
+#include <safegtk.h>
 
 #define CROPRESIZEBORDER 4
 
@@ -44,9 +45,9 @@ FileBrowserEntry::FileBrowserEntry (Thumbnail* thm, const Glib::ustring& fname)
     scale = 1;
     
     if (!iconsLoaded) {
-        editedIcon = Gdk::Pixbuf::create_from_file (argv0+"/images/edited.png");
-        recentlySavedIcon = Gdk::Pixbuf::create_from_file (argv0+"/images/saved.png");
-        enqueuedIcon = Gdk::Pixbuf::create_from_file (argv0+"/images/processing.png");
+        editedIcon = safe_create_from_file (argv0+"/images/edited.png");
+        recentlySavedIcon = safe_create_from_file (argv0+"/images/saved.png");
+        enqueuedIcon = safe_create_from_file (argv0+"/images/processing.png");
     }
     
     if (thm)

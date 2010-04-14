@@ -22,6 +22,7 @@
 #include <glib/gstdio.h>
 #include <sstream>
 #include <multilangmgr.h>
+#include <safekeyfile.h>
 
 Options options;
 Glib::ustring versionString = "v3.0 alpha 1";
@@ -30,6 +31,8 @@ Options::Options () {
 
     setDefaults ();
 }
+
+const char *DefaultLanguage = "English (US)";
 
 void Options::setDefaults () {
 
@@ -76,7 +79,7 @@ void Options::setDefaults () {
     shadowThreshold = 0;
     bgcolor = 0;
     blinkClipped = true;
-    language = "english";
+    language = DefaultLanguage;
     lastSaveAsPath = "";
     theme = "";
     maxThumbnailHeight = 400;
@@ -128,10 +131,13 @@ Options* Options::copyFrom (Options* other) {
 
 int Options::readFromFile (Glib::ustring fname) {
 
-    Glib::KeyFile keyFile;
+    rtengine::SafeKeyFile keyFile;
     
-    try {
-
+    char blah[256];
+    strcpy (blah, language.c_str());
+    printf ("options filename = \"%s\"\n", fname.c_str());
+    
+    
     if (!keyFile.load_from_file (fname)) 
         return 1;
 
@@ -258,15 +264,11 @@ if (keyFile.has_group ("Batch Processing")) {
 }
 
         return 0;
-    }
-    catch (Glib::Error) {
-        return 1;
-    }
 }
 
 int Options::saveToFile (Glib::ustring fname) {
 
-    Glib::KeyFile keyFile;
+    rtengine::SafeKeyFile keyFile;
     
     keyFile.set_boolean ("General", "StoreLastProfile", savesParamsAtExit);
     if (startupDir==STARTUPDIR_HOME)
@@ -400,8 +402,12 @@ void Options::load () {
         }
         cacheBaseDir = rtdir + "/cache";
     }
-    if (!langMgr.load (argv0+"/languages/"+options.language, new MultiLangMgr (argv0+"/languages/english-us")))
-        langMgr.load (argv0+"/languages/english-us");
+
+    Glib::ustring fname = argv0+"/languages/";
+    fname += (options.language.empty())? DefaultLanguage : options.language;
+			
+    if (!langMgr.load (fname, new MultiLangMgr (argv0+"/languages/"+DefaultLanguage)))
+        langMgr.load (argv0+"/languages/"+DefaultLanguage);
 
     rtengine::init (&options.rtSettings);
 }

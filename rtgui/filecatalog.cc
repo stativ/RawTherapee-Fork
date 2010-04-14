@@ -25,6 +25,7 @@
 #include <iostream>
 #include <renamedlg.h>
 #include <thumbimageupdater.h>
+#include <safegtk.h>
 
 #define CHECKTIME 2000
 
@@ -210,22 +211,8 @@ void FileCatalog::closeDir () {
 std::vector<Glib::ustring> FileCatalog::getFileList () {
 
     std::vector<Glib::ustring> names;
-
-    try {
-        Glib::RefPtr<Gio::File> dir = Gio::File::create_for_path (selectedDirectory);
-        if (!dir)
-            return names;
-		
-// FILE enumerator api leaks memory. Fixed in glibmm 2.18.1. Waiting for new release...
-        Glib::RefPtr<Gio::FileEnumerator> dirList = dir->enumerate_children ();
-        if (!dirList)
-            return names;	
-        for (Glib::RefPtr<Gio::FileInfo> info = dirList->next_file(); info; info = dirList->next_file()) 
-            names.push_back (Glib::build_filename (selectedDirectory, info->get_name()));
-    }
-    catch (Glib::Exception& ex) {
-        std::cout << ex.what();
-    }
+    Glib::RefPtr<Gio::File> dir = Gio::File::create_for_path (selectedDirectory);
+		safe_build_file_list (dir, names, selectedDirectory);
     return names;
 }
 
@@ -705,7 +692,7 @@ void FileCatalog::checkAndAddFile (Glib::RefPtr<Gio::File> file) {
 
     if (!file)
         return;
-    Glib::RefPtr<Gio::FileInfo> info = file->query_info();
+    Glib::RefPtr<Gio::FileInfo> info = safe_query_file_info(file);
     if (info && info->get_file_type() != Gio::FILE_TYPE_DIRECTORY && (!info->is_hidden() || !options.fbShowHidden)) {
         int lastdot = info->get_name().find_last_of ('.');
         if (options.is_extention_enabled(lastdot!=Glib::ustring::npos ? info->get_name().substr (lastdot+1) : "")){
@@ -720,7 +707,7 @@ void FileCatalog::addAndOpenFile (const Glib::ustring& fname) {
     Glib::RefPtr<Gio::File> file = Gio::File::create_for_path (fname);
     if (!file)
         return;
-    Glib::RefPtr<Gio::FileInfo> info = file->query_info();
+    Glib::RefPtr<Gio::FileInfo> info = safe_query_file_info(file);
     int lastdot = info->get_name().find_last_of ('.');
     if (options.is_extention_enabled(lastdot!=Glib::ustring::npos ? info->get_name().substr (lastdot+1) : "")){
         // if supported, load thumbnail first
