@@ -26,8 +26,8 @@ RTWindow::RTWindow () {
     cacheMgr.init ();
 
 #ifdef GLIBMM_EXCEPTIONS_ENABLED
-		try { set_default_icon_from_file (argv0+"/images/logoicon16.png"); }
-		} (Glib::Exception& ex) {		printf ("%s\n", ex.what().c_str());	}
+		try { set_default_icon_from_file (argv0+"/images/logoicon16.png");
+		} catch(Glib::Exception& ex) {		printf ("%s\n", ex.what().c_str());	}
 #else
  	  {		std::auto_ptr<Glib::Error> error;
 				set_default_icon_from_file (argv0+"/images/logoicon16.png", error);

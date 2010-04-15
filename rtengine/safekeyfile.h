@@ -34,20 +34,9 @@ class SafeKeyFile : public  Glib::KeyFile
 		bool load_from_file(const std::string& filename, Glib::KeyFileFlags flags = Glib::KEY_FILE_NONE)		
 			SAFE_KEY_FILE_METHOD(load_from_file(filename,flags), load_from_file(filename,flags,error), bool);
 		
-		//bool has_key(const Glib::ustring& group_name, const Glib::ustring& key) const		
-		//	SAFE_KEY_FILE_METHOD(has_key(group_name,key), has_key(group_name,key,error), bool);
+		bool has_key(const Glib::ustring& group_name, const Glib::ustring& key) const		
+			SAFE_KEY_FILE_METHOD(has_key(group_name,key), has_key(group_name,key,error), bool);
 			
-			bool has_key(const Glib::ustring& group_name, const Glib::ustring& key) const		
-			{
-				bool res = 0; 
-				do { 
-					std::auto_ptr<Glib::Error> error; 
-					res = Glib::KeyFile::has_key(group_name,key,error); 
-					if (error.get())
-					{/* TODO */}; 
-				  return res;
-				} while(0);
-			}
 		bool get_boolean(const Glib::ustring& group_name, const Glib::ustring& key) const
 			SAFE_KEY_FILE_METHOD(get_boolean(group_name,key), get_boolean(group_name,key,error), bool);
 		
@@ -67,21 +56,9 @@ class SafeKeyFile : public  Glib::KeyFile
 		IntArrayType get_integer_list(const Glib::ustring& group_name, const Glib::ustring& key) const
 			SAFE_KEY_FILE_METHOD_NOINIT(get_integer_list(group_name,key), get_integer_list(group_name,key,error), IntArrayType);
 
-		//Glib::ustring get_string(const Glib::ustring& group_name, const Glib::ustring& key) const
-		//	SAFE_KEY_FILE_METHOD(get_string(group_name,key), get_string(group_name,key,error), Glib::ustring);
-			
 		Glib::ustring get_string(const Glib::ustring& group_name, const Glib::ustring& key) const
-			{
-				Glib::ustring res; 
-				do { 
-					std::auto_ptr<Glib::Error> error; 
-					res = Glib::KeyFile::get_string(group_name,key,error); 
-					if (error.get())
-					{/* TODO */}; 
-				  return res;
-				} while(0);
-			}
-		
+			SAFE_KEY_FILE_METHOD_NOINIT(get_string(group_name,key), get_string(group_name,key,error), Glib::ustring);
+			
 		typedef std::vector<Glib::ustring> StringArrayType;
 			
 		StringArrayType get_string_list(const Glib::ustring& group_name, const Glib::ustring& key) const

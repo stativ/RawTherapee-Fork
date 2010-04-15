@@ -112,7 +112,7 @@ bool safe_spawn_command_line_async (const Glib::ustring& cmd_utf8)
 				printf ("command line: |%s|\n", cmd.c_str());
 				Glib::spawn_command_line_async (cmd);
 				success = true;
-		} (Glib::Exception& ex) {
+		} catch (Glib::Exception& ex) {
 				printf ("%s\n", ex.what().c_str());
 		}
 #else

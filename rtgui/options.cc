@@ -36,6 +36,8 @@ const char *DefaultLanguage = "English (US)";
 
 void Options::setDefaults () {
 
+    windowWidth = 1000;
+    windowHeight = 600;
     firstRun = true;
     savesParamsAtExit = true;
     saveFormat.format = "jpg";
@@ -133,11 +135,6 @@ int Options::readFromFile (Glib::ustring fname) {
 
     rtengine::SafeKeyFile keyFile;
     
-    char blah[256];
-    strcpy (blah, language.c_str());
-    printf ("options filename = \"%s\"\n", fname.c_str());
-    
-    
     if (!keyFile.load_from_file (fname)) 
         return 1;
 
@@ -224,6 +221,8 @@ if (keyFile.has_group ("Clipping Indication")) {
 }
 
 if (keyFile.has_group ("GUI")) { 
+    if (keyFile.has_key ("GUI", "WindowWidth"))     windowWidth   = keyFile.get_integer ("GUI", "WindowWidth");
+    if (keyFile.has_key ("GUI", "WindowHeight"))     windowHeight   = keyFile.get_integer ("GUI", "WindowHeight");
     if (keyFile.has_key ("GUI", "DirBrowserWidth"))     dirBrowserWidth   = keyFile.get_integer ("GUI", "DirBrowserWidth");
     if (keyFile.has_key ("GUI", "DirBrowserHeight"))    dirBrowserHeight  = keyFile.get_integer ("GUI", "DirBrowserHeight");
     if (keyFile.has_key ("GUI", "ToolPanelWidth"))      toolPanelWidth    = keyFile.get_integer ("GUI", "ToolPanelWidth");
@@ -341,6 +340,8 @@ int Options::saveToFile (Glib::ustring fname) {
     keyFile.set_boolean ("Profiles", "SaveParamsToCache", saveParamsCache);
     keyFile.set_integer ("Profiles", "LoadParamsFromLocation", paramsLoadLocation);
     
+    keyFile.set_integer ("GUI", "WindowWidth", windowWidth);
+    keyFile.set_integer ("GUI", "WindowHeight", windowHeight);
     keyFile.set_integer ("GUI", "DirBrowserWidth", dirBrowserWidth);
     keyFile.set_integer ("GUI", "DirBrowserHeight", dirBrowserHeight);
     keyFile.set_integer ("GUI", "ToolPanelWidth", toolPanelWidth);
