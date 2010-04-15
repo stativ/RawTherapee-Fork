@@ -16,7 +16,7 @@ set (BASESOURCEFILES
     histogrampanel.cc history.cc  imagearea.cc
     imageareapanel.cc iptcpanel.cc lcurve.cc lumadenoise.cc main.cc
     multilangmgr.cc mycurve.cc options.cc
-    preferences.cc profilepanel.cc saveasdlg.cc
+    preferences.cc profilepanel.cc safegtk.cc saveasdlg.cc
     saveformatpanel.cc splash.cc
     thumbnail.cc tonecurve.cc toolbar.cc
     guiutils.cc zoompanel.cc toolpanelcoord.cc
@@ -51,13 +51,3 @@ target_link_libraries (rth rtengine ${JPEG_LIBRARIES} ${PNG_LIBRARIES} ${ZLIB_LI
    ${GLIB2_LIBRARIES} ${GLIBMM_LIBRARIES} ${GTK_LIBRARIES} ${GTKMM_LIBRARIES} ${GIO_LIBRARIES} ${GIOMM_LIBRARIES} ${LCMS_LIBRARIES} ${IPTCDATA_LIBRARIES})
 install (TARGETS rth DESTINATION ${BINDIR})
 
-
-if (WIN32)
-    install (FILES ../options.win DESTINATION ${DATADIR}
-        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
-        RENAME options)
-else (WIN32)
-    install (FILES ../options.lin DESTINATION ${DATADIR}
-        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
-        RENAME options)
-endif (WIN32)
